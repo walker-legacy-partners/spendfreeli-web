@@ -59,81 +59,31 @@ const getServerState = (): State => 'detecting';
 
 export function AuthCallbackClient() {
   const state = useSyncExternalStore(subscribe, getState, getServerState);
-  // DEBUG: setter dropped because the fallback timer is disabled while
-  // the debug overlay is deployed. Restore both when re-enabling redirect.
-  const [showFallback] = useState(false);
+  const [showFallback, setShowFallback] = useState(false);
 
   useEffect(() => {
-    console.log(
-      '[auth-callback] full URL:',
-      typeof window !== 'undefined' ? window.location.href : 'SSR',
-    );
-    console.log(
-      '[auth-callback] hash:',
-      typeof window !== 'undefined' ? window.location.hash : 'SSR',
-    );
-    console.log(
-      '[auth-callback] search:',
-      typeof window !== 'undefined' ? window.location.search : 'SSR',
-    );
-
     if (state !== 'redirect') return;
 
-    // DEBUG: redirect intentionally disabled so the on-screen debug
-    // overlay stays visible. Restore before shipping.
-    // const { search, hash } = window.location;
-    // window.location.href = `spendfreeli://auth-callback${search}${hash}`;
-    //
-    // const fallbackTimer = window.setTimeout(() => {
-    //   setShowFallback(true);
-    // }, 3000);
-    // return () => window.clearTimeout(fallbackTimer);
+    const { search, hash } = window.location;
+    window.location.href = `spendfreeli://auth-callback${search}${hash}`;
+
+    const fallbackTimer = window.setTimeout(() => {
+      setShowFallback(true);
+    }, 3000);
+
+    return () => window.clearTimeout(fallbackTimer);
   }, [state]);
 
   return (
-    <>
-      <div
-        style={{
-          position: 'fixed',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          background: 'black',
-          color: 'lime',
-          fontSize: 11,
-          padding: 8,
-          wordBreak: 'break-all',
-          zIndex: 9999,
-        }}
-      >
-        <div>
-          href:{' '}
-          {typeof window !== 'undefined' ? window.location.href : 'ssr'}
-        </div>
-        <div>
-          hash:{' '}
-          {typeof window !== 'undefined'
-            ? window.location.hash || '(empty)'
-            : 'ssr'}
-        </div>
-        <div>
-          search:{' '}
-          {typeof window !== 'undefined'
-            ? window.location.search || '(empty)'
-            : 'ssr'}
-        </div>
-        <div>state: {state}</div>
+    <section className="flex flex-1 items-center justify-center px-6 py-16">
+      <div className="mx-auto max-w-md text-center">
+        {state === 'detecting' && <DetectingUI />}
+        {state === 'redirect' && (
+          <RedirectingUI showFallback={showFallback} />
+        )}
+        {state === 'desktop' && <DesktopUI />}
       </div>
-      <section className="flex flex-1 items-center justify-center px-6 py-16">
-        <div className="mx-auto max-w-md text-center">
-          {state === 'detecting' && <DetectingUI />}
-          {state === 'redirect' && (
-            <RedirectingUI showFallback={showFallback} />
-          )}
-          {state === 'desktop' && <DesktopUI />}
-        </div>
-      </section>
-    </>
+    </section>
   );
 }
 
