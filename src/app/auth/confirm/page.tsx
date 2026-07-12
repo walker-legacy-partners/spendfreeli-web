@@ -1,62 +1,70 @@
 'use client';
-
-import { useEffect, Suspense } from 'react';
+import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 /**
- * JavaScript-redirect confirmation page.
+ * Click-wall confirmation page — SpendFreeli
  *
- * Purpose: Gmail's link-prefetcher fetches URLs found in email HTML to
- * check for safety/spam. That prefetch consumes single-use Supabase
- * magic-link/confirmation tokens before the human ever clicks the
- * button. This page acts as a safe intermediate: Gmail's bot fetches
- * this page but does NOT execute the JS redirect, so the underlying
- * Supabase confirmation URL stays unconsumed until the real user
- * clicks through and their browser runs the effect below.
+ * WHY THIS EXISTS:
+ * Modern email security scanners (Gmail, Outlook/Microsoft ATP,
+ * Proofpoint, Mimecast) use headless Chromium crawlers that execute
+ * JavaScript, including React useEffect and window.location.replace().
+ * Any auto-redirect on page load will consume the one-time Supabase
+ * PKCE token before the real user clicks, causing "token not found."
  *
- * The Supabase email template points here with the actual
- * confirmation URL passed as an urlquery-encoded param. On the
- * client, we decode it and `location.replace()` to hand control
- * back to Supabase. Users with JS disabled see the fallback link.
+ * THE RULE: Zero network calls and zero navigation on page load.
+ * The confirmation URL is only followed when a human clicks the button.
+ * Bots render the page, find a button with an onClick handler, and
+ * move on without consuming the token.
+ *
+ * WHAT NOT TO DO — these all fail against modern scanners:
+ *   ✗ useEffect(() => location.replace(url), [])
+ *   ✗ <meta http-equiv="refresh" content="0;url=...">
+ *   ✗ <script>window.location.href = url</script>
+ *   ✗ router.push(url) inside useEffect
  */
-
-function ConfirmRedirect() {
+function ConfirmClickWall() {
   const searchParams = useSearchParams();
-  const confirmationUrl = searchParams.get('confirmation_url');
+  const raw = searchParams.get('confirmation_url');
+  const confirmationUrl = raw ? decodeURIComponent(raw) : null;
 
-  useEffect(() => {
+  function handleConfirm() {
     if (confirmationUrl) {
-      window.location.replace(decodeURIComponent(confirmationUrl));
+      window.location.href = confirmationUrl;
     }
-  }, [confirmationUrl]);
+  }
+
+  if (!confirmationUrl) {
+    return (
+      <main className="min-h-screen bg-background flex items-center justify-center px-6">
+        <div className="max-w-md text-center">
+          <div className="text-5xl mb-6">💰</div>
+          <h1 className="text-2xl font-bold text-text-primary mb-3">SpendFreeli</h1>
+          <p className="text-error text-sm mt-4">
+            Invalid confirmation link. Please request a new magic link from the app.
+          </p>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-background flex items-center justify-center px-6">
-      <div className="max-w-md text-center">
+      <div className="max-w-md w-full text-center">
         <div className="text-5xl mb-6">💰</div>
-        <h1 className="text-2xl font-bold text-text-primary mb-3">
-          SpendFreeli
-        </h1>
-        <p className="text-text-secondary mb-2">Confirming your email...</p>
-        <div className="mt-4 h-1 w-32 mx-auto bg-primary-light rounded-full overflow-hidden">
-          <div className="h-full bg-primary rounded-full animate-pulse" />
-        </div>
-        {confirmationUrl && (
-          <p className="mt-8 text-sm text-text-secondary">
-            Not redirecting?{' '}
-            <a
-              href={decodeURIComponent(confirmationUrl)}
-              className="text-primary hover:underline font-medium"
-            >
-              Tap here to continue
-            </a>
-          </p>
-        )}
-        {!confirmationUrl && (
-          <p className="mt-8 text-sm text-error">
-            Invalid confirmation link. Please request a new one.
-          </p>
-        )}
+        <h1 className="text-2xl font-bold text-text-primary mb-2">SpendFreeli</h1>
+        <p className="text-text-secondary mb-8">
+          Tap the button below to complete your sign-in.
+        </p>
+        <button
+          onClick={handleConfirm}
+          className="w-full bg-primary text-white font-bold text-base py-4 px-8 rounded-full hover:bg-primary-dark active:scale-95 transition-all duration-150"
+        >
+          Complete sign-in
+        </button>
+        <p className="mt-6 text-xs text-text-secondary">
+          This link expires in 1 hour. If it no longer works, request a new one from the app.
+        </p>
       </div>
     </main>
   );
@@ -71,7 +79,7 @@ export default function Page() {
         </main>
       }
     >
-      <ConfirmRedirect />
+      <ConfirmClickWall />
     </Suspense>
   );
 }
