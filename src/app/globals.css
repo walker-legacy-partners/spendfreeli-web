@@ -1,0 +1,25 @@
+@import "tailwindcss";
+@import "../tokens/tokens.css";
+
+html {
+  background: var(--color-background);
+  color: var(--color-text-primary);
+}
+
+body {
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Offset anchor targets by the sticky header height so `#features` etc.
+   land below the header instead of behind it. */
+[id] {
+  scroll-margin-top: 5rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
