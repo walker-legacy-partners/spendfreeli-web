@@ -1,0 +1,11 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "PLACEHOLDER_TEAM_ID.com.walkerlegacypartners.spendfreeli",
+        "paths": ["/auth/callback"]
+      }
+    ]
+  }
+}
