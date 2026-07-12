@@ -15,9 +15,9 @@ const features: readonly Feature[] = [
   },
   {
     emoji: '👨‍👩‍👧',
-    title: 'Budget as a Family',
+    title: 'Budget Solo or as a Family',
     description:
-      'Every household member sees the same budget. No more surprises.',
+      'Budget on your own or share with your household. Everyone stays on the same page.',
   },
   {
     emoji: '📊',
