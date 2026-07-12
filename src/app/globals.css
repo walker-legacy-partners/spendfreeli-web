@@ -23,3 +23,68 @@ body {
     scroll-behavior: smooth;
   }
 }
+
+/* Typography for fetched legal document HTML rendered via
+   dangerouslySetInnerHTML. See src/components/sections/LegalDocument.tsx. */
+.legal-content {
+  color: var(--color-text-secondary);
+  font-size: 1rem;
+  line-height: 1.75;
+}
+.legal-content > *:first-child {
+  margin-top: 0;
+}
+.legal-content h1 {
+  margin-top: 2rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+.legal-content h2 {
+  margin-top: 1.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+.legal-content h3 {
+  margin-top: 1.5rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+.legal-content p {
+  margin-top: 1rem;
+}
+.legal-content ol,
+.legal-content ul {
+  margin-top: 1rem;
+  padding-left: 1.5rem;
+}
+.legal-content ol {
+  list-style: decimal;
+}
+.legal-content ul {
+  list-style: disc;
+}
+.legal-content li {
+  margin-top: 0.5rem;
+}
+.legal-content li > p {
+  display: inline;
+  margin-top: 0;
+}
+.legal-content a {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+.legal-content a:hover {
+  color: var(--color-primary-dark);
+}
+.legal-content strong {
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+.legal-content hr {
+  margin: 2rem 0;
+  border-top: 1px solid var(--color-border);
+}
