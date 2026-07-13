@@ -75,37 +75,15 @@ export function AuthCallbackClient() {
   }, [state]);
 
   return (
-    <>
-      <div
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          background: 'red',
-          color: 'white',
-          padding: 12,
-          fontSize: 12,
-          fontFamily: 'monospace',
-          wordBreak: 'break-all',
-          zIndex: 9999,
-        }}
-      >
-        <div><strong>DEBUG (temp)</strong> — state: {state}</div>
-        <div>href: {typeof window !== 'undefined' ? window.location.href : 'ssr'}</div>
-        <div>search: {typeof window !== 'undefined' ? window.location.search || '(empty)' : 'ssr'}</div>
-        <div>hash: {typeof window !== 'undefined' ? window.location.hash || '(empty)' : 'ssr'}</div>
+    <section className="flex flex-1 items-center justify-center px-6 py-16">
+      <div className="mx-auto max-w-md text-center">
+        {state === 'detecting' && <DetectingUI />}
+        {state === 'redirect' && (
+          <RedirectingUI showFallback={showFallback} />
+        )}
+        {state === 'desktop' && <DesktopUI />}
       </div>
-      <section className="flex flex-1 items-center justify-center px-6 py-16">
-        <div className="mx-auto max-w-md text-center">
-          {state === 'detecting' && <DetectingUI />}
-          {state === 'redirect' && (
-            <RedirectingUI showFallback={showFallback} />
-          )}
-          {state === 'desktop' && <DesktopUI />}
-        </div>
-      </section>
-    </>
+    </section>
   );
 }
 

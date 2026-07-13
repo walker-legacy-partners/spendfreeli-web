@@ -4,7 +4,9 @@
     "target": {
       "namespace": "android_app",
       "package_name": "com.walkerlegacypartners.spendfreeli",
-      "sha256_cert_fingerprints": ["PLACEHOLDER_SHA256"]
+      "sha256_cert_fingerprints": [
+        "E3:5B:CB:4F:14:FB:42:A7:3E:60:18:7F:2B:2F:28:73:F7:5D:E2:3C:7D:B7:E6:7B:A2:66:68:72:9F:50:3D:77"
+      ]
     }
   }
 ]
