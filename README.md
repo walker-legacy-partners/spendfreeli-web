@@ -34,3 +34,12 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## License
+
+This repository contains proprietary software owned by Walker Legacy Partners LLC.
+No license is granted to use, copy, modify, or distribute this software
+except as expressly authorized in writing.
+
+Copyright © 2026 Walker Legacy Partners LLC. All rights reserved.
+SpendFreeli™ is a trademark of Walker Legacy Partners LLC.
